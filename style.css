@@ -1,0 +1,19 @@
+*{
+    margin: 0px;
+    padding: 0px;
+}
+    div{
+    margin:3px;
+    border: 2px solid black;
+    height:50vh;
+    width:250vw;
+    background-color:dimgray;
+    font-size-adjust:var(250vw);
+}
+h1{
+    color: beige;
+    font-size:larger;
+}
+p{
+    color: white;
+}
