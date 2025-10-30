@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Green Print — Carbon Transparency Platform</title>
+  <meta name="description" content="Green Print makes carbon emissions visible, measurable, and actionable for industries, fleets, and individuals." />
+  <style>
+    :root{
+      --bg: #0e1511;
+      --card: #121d17;
+      --muted: #a3d7b1;
+      --text: #eaffef;
+      --subtle: #cfeedd;
+      --accent: #79e39b;
+      --accent-2:#37d39b;
+      --border:#23392b;
+      --ink:#09120d;
+      --shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+    @media (prefers-color-scheme: light){
+      :root{ --bg:#f7fbf6; --card:#ffffff; --text:#102017; --subtle:#2a4636; --border:#e7efe9; --ink:#0c1b13; --shadow:0 8px 18px rgba(0,0,0,.08) }
+    }
+    *{ box-sizing:border-box }
+    html,body{ margin:0; padding:0; background:var(--bg); color:var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif; }
+    a{ color:inherit; text-decoration: none }
+    img{ max-width:100%; height:auto; }
+    .container{ max-width:1180px; margin:0 auto; padding: 0 20px; }
+    .btn{ display:inline-flex; align-items:center; gap:.6rem; border:1px solid var(--border); padding:.9rem 1.1rem; border-radius:14px; font-weight:700; transition:transform .15s ease, background .15s ease, border-color .15s ease }
+    .btn:hover{ transform: translateY(-2px) }
+    .btn.primary{ background: linear-gradient(135deg,var(--accent),var(--accent-2)); color:#062112; border-color: transparent }
+    .btn.ghost{ background: transparent; color: var(--muted) }
+    .btn.link{ padding:0; border:0; color: var(--accent); background:transparent }
+    .chip{ display:inline-flex; gap:.4rem; align-items:center; background:rgba(121,227,155,.08); border:1px solid var(--border); border-radius:999px; padding:.35rem .7rem; color:var(--muted); font-size:.9rem }
+
+    /* Top Nav */
+    .nav{ position:sticky; top:0; z-index:50; backdrop-filter: saturate(130%) blur(8px); background: color-mix(in oklab, var(--bg) 85%, transparent); border-bottom:1px solid var(--border) }
+    .nav-inner{ display:flex; align-items:center; justify-content:space-between; height:64px }
+    .brand{ display:flex; align-items:center; gap:.6rem; font-weight:900; letter-spacing:.2px }
+    .brand svg{ width:28px; height:28px }
+    .nav-actions{ display:flex; align-items:center; gap:.6rem }
+    .theme{ width:40px; height:40px; display:grid; place-items:center; border-radius:10px; border:1px solid var(--border); background:transparent; cursor:pointer }
+
+    /* Hero */
+    .hero{ padding:72px 0 24px; text-align:center }
+    .hero h1{ font-size: clamp(28px, 6vw, 56px); line-height:1.05; margin: 10px auto; max-width: 980px; }
+    .hero p{ color:var(--subtle); max-width:820px; margin: 16px auto 0; font-size: clamp(16px, 2.4vw, 20px) }
+    .hero-cta{ display:flex; gap:.8rem; justify-content:center; flex-wrap:wrap; margin: 18px 0 10px }
+    .badges{ display:flex; gap:.5rem; justify-content:center; flex-wrap:wrap; margin-top: 8px }
+    .badges .chip{ font-size:.85rem }
+
+    /* Sections & cards */
+    section{ padding: 34px 0 }
+    .card{ background: var(--card); border:1px solid var(--border); border-radius:18px; padding:18px; box-shadow: var(--shadow) }
+
+    /* KPI Grid */
+    .kpis{ display:grid; gap:18px; grid-template-columns: repeat(4,1fr) }
+    .kpi h3{ margin:0; font-size: .95rem; color: var(--subtle) }
+    .kpi .value{ margin-top: 8px; font-size: clamp(24px, 4.5vw, 42px); font-weight: 900; color: var(--accent) }
+
+    /* Chart block */
+    canvas{ width:100% }
+
+    /* Features grid */
+    .features{ display:grid; gap:18px; grid-template-columns: repeat(3,1fr) }
+    .feature h4{ margin:0 0 6px 0 }
+    .feature p{ margin:0; color:var(--subtle) }
+
+    /* How it works - steps */
+    .steps{ display:grid; gap:18px; grid-template-columns: repeat(3,1fr) }
+    .step .n{ font-weight:900; color:var(--accent); font-size: 1.1rem }
+    .step h5{ margin:.3rem 0 .4rem 0; font-size:1.05rem }
+
+    /* Testimonials */
+    .testis{ display:grid; gap:18px; grid-template-columns: repeat(2,1fr) }
+    .quote{ font-size:1rem; color: var(--subtle) }
+    .person{ display:flex; align-items:center; gap:.7rem; margin-top:.8rem }
+    .avatar{ width:42px; height:42px; border-radius:50%; background: #1a2c22; display:grid; place-items:center; color:var(--muted); font-weight:800 }
+
+    /* CTA */
+    .cta{ text-align:center; padding: 38px 0 60px }
+    .cta .card{ display:inline-block; padding: 28px; max-width: 900px }
+
+    /* Footer */
+    footer{ border-top:1px solid var(--border); color: var(--subtle); font-size:.95rem }
+    .footer-inner{ display:flex; align-items:center; justify-content:space-between; padding: 22px 0; flex-wrap:wrap; gap:10px }
+    .links{ display:flex; gap:14px; flex-wrap:wrap }
+
+    /* Animations */
+    .reveal{ opacity:0; transform: translateY(10px); transition: opacity .6s ease, transform .6s ease }
+    .reveal.in{ opacity:1; transform:none }
+
+    @media (max-width: 1024px){
+      .kpis{ grid-template-columns: repeat(2,1fr) }
+      .features{ grid-template-columns: repeat(2,1fr) }
+      .steps{ grid-template-columns: repeat(2,1fr) }
+      .testis{ grid-template-columns: 1fr }
+    }
+    @media (max-width: 640px){
+      .kpis, .features, .steps{ grid-template-columns: 1fr }
+      .nav-inner{ gap:10px }
+      .hero-cta{ flex-direction:column }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAV -->
+  <div class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="#">
+        <!-- Lightweight SVG logo -->
+         <img src="greenprint-logo.png" alt="" style="height:40px; width:auto;" />
+        Green Print
+      </a>
+      <div class="nav-actions">
+        <a href="#features" class="btn ghost">Features</a>
+        <a href="#how" class="btn ghost">How it works</a>
+        <a href="#contact" class="btn ghost">Contact</a>
+        <button id="theme" class="theme" aria-label="Toggle theme">🌓</button>
+        <a href="#demo" class="btn primary">Launch Demo</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <header class="hero container">
+    <span class="chip">Realtime • ESG-ready • Low-carbon UI</span>
+    <h1>Make Emissions <span style="color:var(--accent)">Visible</span>. Turn Carbon Data into <span style="color:var(--accent)">Action</span>.</h1>
+    <p>Green Print delivers live, trustworthy carbon intelligence for industries, fleets, and individuals—so you can reduce footprints with confidence.</p>
+    <div class="hero-cta">
+      <a href="#demo" class="btn primary">Try the Live Dashboard</a>
+      <a href="#contact" class="btn">Book a Pilot</a>
+      <a href="#features" class="btn ghost">Explore</a>
+    </div>
+    <div class="badges">
+      <span class="chip">API-first</span>
+      <span class="chip">IoT Sensor-ready</span>
+      <span class="chip">Privacy by Design</span>
+      <span class="chip">Carbon-Lite Site</span>
+    </div>
+  </header>
+
+  <!-- DEMO / KPIs -->
+  <main id="demo" class="container">
+    <section class="kpis reveal">
+      <div class="card kpi"><h3>Industry Emissions (kg CO₂e)</h3><div class="value" id="kpi-ind">—</div></div>
+      <div class="card kpi"><h3>Vehicle Emissions (kg CO₂e)</h3><div class="value" id="kpi-veh">—</div></div>
+      <div class="card kpi"><h3>Renewable Share (%)</h3><div class="value" id="kpi-ren">—</div></div>
+      <div class="card kpi"><h3>ESG Score</h3><div class="value" id="kpi-esg">—</div></div>
+    </section>
+
+    <section class="card reveal" aria-labelledby="chart-title">
+      <h3 id="chart-title" style="margin:0 0 10px 0">Realtime Emissions Stream</h3>
+      <canvas id="chart" height="120" role="img" aria-label="Line chart of industry and vehicle emissions over time"></canvas>
+      <p style="color:var(--subtle); margin:.5rem 0 0 0">*Simulated data for pitch demo. Replace with live sensors/API.</p>
+    </section>
+
+    <section class="reveal">
+      <h2>Clients</h2>
+      <div class="card" role="region" aria-label="Client List">
+        <div style="overflow:auto">
+          <table style="width:100%; border-collapse: collapse">
+            <thead>
+              <tr style="text-align:left; border-bottom:1px solid var(--border)">
+                <th style="padding:10px">Organization</th>
+                <th style="padding:10px">Sector</th>
+                <th style="padding:10px">Scale</th>
+              </tr>
+            </thead>
+            <tbody id="clients"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FEATURES -->
+  <section id="features" class="container">
+    <h2 class="reveal">Built for Transparency & Trust</h2>
+    <div class="features">
+      <div class="card feature reveal"><h4>Realtime Streaming</h4><p>Low-latency updates without heavy polling. Designed to scale.</p></div>
+      <div class="card feature reveal"><h4>Actionable Insights</h4><p>KPIs that connect directly to reduction playbooks.</p></div>
+      <div class="card feature reveal"><h4>ESG Compliance</h4><p>Export data for reports; align with standards and audits.</p></div>
+      <div class="card feature reveal"><h4>Low-Carbon UI</h4><p>Lightweight assets, minimal JS, and fast rendering.</p></div>
+      <div class="card feature reveal"><h4>Privacy & Security</h4><p>Data minimization and strict access control built-in.</p></div>
+      <div class="card feature reveal"><h4>API-first</h4><p>Integrate with sensors, ERPs, and third-party tools.</p></div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how" class="container">
+    <h2 class="reveal">How it works</h2>
+    <div class="steps">
+      <div class="card step reveal">
+        <div class="n">01</div>
+        <h5>Ingest</h5>
+        <p>Connect IoT sensors, fleet telematics, and operational data via secure API.</p>
+      </div>
+      <div class="card step reveal">
+        <div class="n">02</div>
+        <h5>Model</h5>
+        <p>Normalize, estimate, and attribute emissions using transparent factors.</p>
+      </div>
+      <div class="card step reveal">
+        <div class="n">03</div>
+        <h5>Act</h5>
+        <p>Track KPIs, trigger alerts, and export ESG-ready reports automatically.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS
+  <section class="container">
+    <h2 class="reveal">What partners say</h2>
+    <div class="testis">
+      <div class="card reveal">
+        <div class="quote">“The live visibility changed our planning—reductions became measurable week by week.”</div>
+        <div class="person">
+          <div class="avatar">A</div>
+          <div><strong>Anita Rao</strong><br/><span style="color:var(--subtle)">COO, Swift Logistics</span></div>
+        </div>
+      </div>
+      <div class="card reveal">
+        <div class="quote">“Green Print turned compliance into advantage. We save cost and win customer trust.”</div>
+        <div class="person">
+          <div class="avatar">V</div>
+          <div><strong>Vikram Shah</strong><br/><span style="color:var(--subtle)">Sustainability Lead, Acme Manufacturing</span></div>
+        </div>
+      </div>
+    </div>
+  </section> -->
+
+  <!-- CTA -->
+  <section id="contact" class="cta container">
+    <div class="card reveal">
+      <h2>Ready to pilot Green Print?</h2>
+      <p style="color:var(--subtle)">Let’s launch a 60-day client pilot with real data and measurable outcomes.</p>
+      <div style="display:flex; gap:.6rem; justify-content:center; flex-wrap:wrap">
+        <a href="mailto:founder@greenprint.io" class="btn primary">Email the Founder</a>
+        <a href="#" class="btn">Download One-Pager</a>
+        <button class="btn ghost" onclick="alert('Deck exported (demo). Replace with real export logic.');">Export Deck (Demo)</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container footer-inner">
+      <div>© <span id="year"></span> Green Print • Built for low energy use.</div>
+      <div class="links">
+        <a class="btn link" href="#features">Features</a>
+        <a class="btn link" href="#how">How it works</a>
+        <a class="btn link" href="#contact">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Theme toggle (simple)
+    const themeBtn = document.getElementById('theme');
+    themeBtn.addEventListener('click', () => {
+      const isDark = document.documentElement.dataset.theme !== 'light';
+      document.documentElement.dataset.theme = isDark ? 'light' : 'dark';
+      if(isDark){
+        document.documentElement.style.setProperty('--bg','#f7fbf6');
+        document.documentElement.style.setProperty('--card','#ffffff');
+        document.documentElement.style.setProperty('--text','#102017');
+        document.documentElement.style.setProperty('--subtle','#2a4636');
+        document.documentElement.style.setProperty('--border','#e7efe9');
+        document.documentElement.style.setProperty('--shadow','0 8px 18px rgba(0,0,0,.08)');
+      } else {
+        document.documentElement.style.setProperty('--bg','#0e1511');
+        document.documentElement.style.setProperty('--card','#121d17');
+        document.documentElement.style.setProperty('--text','#eaffef');
+        document.documentElement.style.setProperty('--subtle','#cfeedd');
+        document.documentElement.style.setProperty('--border','#23392b');
+        document.documentElement.style.setProperty('--shadow','0 10px 30px rgba(0,0,0,.25)');
+      }
+    });
+
+    // Lightweight fake data for KPIs + chart
+    const elInd = document.getElementById('kpi-ind');
+    const elVeh = document.getElementById('kpi-veh');
+    const elRen = document.getElementById('kpi-ren');
+    const elEsg = document.getElementById('kpi-esg');
+
+    function rand(min,max){ return Math.round((min + Math.random()*(max-min)) * 10)/10 }
+
+    let ind = rand(180,240);
+    let veh = rand(40,70);
+    let ren = rand(35,50);
+    let esg = Math.round(rand(62,72));
+
+    function updateKPIs(){
+      // tiny random walk
+      ind = Math.max(120, ind + rand(-3,3));
+      veh = Math.max(10,  veh + rand(-2,2));
+      ren = Math.min(95, Math.max(5, ren + rand(-1,1)));
+      esg = Math.max(0, Math.min(100, esg + Math.round(rand(-1,1))));
+
+      elInd.textContent = ind.toFixed(1);
+      elVeh.textContent = veh.toFixed(1);
+      elRen.textContent = ren.toFixed(1) + '%';
+      elEsg.textContent = esg;
+    }
+    updateKPIs(); setInterval(updateKPIs, 2000);
+
+    // Minimal line chart without external libs
+    const canvas = document.getElementById('chart');
+    const ctx = canvas.getContext('2d');
+    const MAX = 40;
+    const data = { labels:[], industry:[], vehicle:[] };
+
+    function drawChart(){
+      const w = canvas.width = canvas.clientWidth * devicePixelRatio;
+      const h = canvas.height = canvas.clientHeight * devicePixelRatio;
+      ctx.clearRect(0,0,w,h);
+      ctx.save(); ctx.scale(devicePixelRatio, devicePixelRatio);
+
+      // Axes
+      const pad = 28;
+      const plotW = canvas.clientWidth - pad*2;
+      const plotH = canvas.clientHeight - pad*2;
+      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--border');
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(pad, pad); ctx.lineTo(pad, pad+plotH); ctx.lineTo(pad+plotW, pad+plotH); ctx.stroke();
+
+      // Scale
+      const all = data.industry.concat(data.vehicle);
+      const maxY = Math.max(100, Math.max(...all, 0));
+      function yv(v){ return pad + plotH - (v/maxY)*plotH }
+      function xv(i){ return pad + (i/(MAX-1))*plotW }
+
+      // Lines
+      function line(arr, color){
+        if(arr.length<2) return;
+        ctx.beginPath();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = color;
+        arr.forEach((v,i)=>{ const x=xv(i), y=yv(v); i?ctx.lineTo(x,y):ctx.moveTo(x,y) });
+        ctx.stroke();
+      }
+      const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent');
+      const accent2= getComputedStyle(document.documentElement).getPropertyValue('--accent-2') || accent;
+      line(data.industry, accent.trim());
+      line(data.vehicle, accent2.trim());
+
+      // Legend
+      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--subtle');
+      ctx.font = '12px system-ui';
+      ctx.fillText('Industry', pad, pad-8);
+      ctx.fillText('Vehicles', pad+70, pad-8);
+      ctx.restore();
+    }
+
+    function tick(){
+      // Push points
+      if(data.labels.length >= MAX){ data.labels.shift(); data.industry.shift(); data.vehicle.shift(); }
+      data.labels.push(new Date().toLocaleTimeString());
+      data.industry.push(ind);
+      data.vehicle.push(veh);
+      drawChart();
+    }
+    drawChart(); setInterval(tick, 2000);
+    window.addEventListener('resize', drawChart);
+
+    // Reveal on scroll
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in') })
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+    const tbody = document.getElementById('clients');
+    clients.forEach(c=>{
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td style="padding:10px;border-bottom:1px dashed var(--border)">${c.name}</td>
+                      <td style="padding:10px;border-bottom:1px dashed var(--border)">${c.sector}</td>
+                      <td style="padding:10px;border-bottom:1px dashed var(--border)">${c.scale}</td>`;
+      tbody.appendChild(tr);
+    });
+  </script>
+</body>
+</html>
